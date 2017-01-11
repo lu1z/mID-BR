@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@mipmap/fingerprint_scan"
+        android:title="Home" />
+    <item android:title="Serviços">
+        <menu>
+            <item
+                android:id="@+id/nav_sprnp"
+                android:icon="@drawable/ic_menu_send"
+                android:title="sp-saml.gidlab.rnp.br" />
+            <item
+                android:id="@+id/nav_sp04"
+                android:icon="@drawable/ic_menu_send"
+                android:title="sp04.redes.eng.br" />
+        </menu>
+    </item>
+</menu>

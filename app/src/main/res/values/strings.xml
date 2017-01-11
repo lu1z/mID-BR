@@ -1,0 +1,56 @@
+<resources>
+    <string name="app_name">mID-BR (CADASTRO)</string>
+    <string name="action_settings">Configurações</string>
+    <string name="title_activity_settings">Configurações</string>
+
+    <!-- Strings related to Settings -->
+    <string name="pref_header_general">General</string>
+    <string name="pref_title_display_name">Usuário</string>
+    <string name="pref_default_display_name"></string>
+
+    <string name="pref_title_account">Enable this user account</string>
+    <string name="pref_description_account">This account could be used to open doors</string>
+    <string name="pref_title_server_endpoint">Servidor</string>
+    <string name="pref_default_server_endpoint">https://idpfido.cafeexpresso.rnp.br</string>
+    <string name="pref_title_degreg_op_request">Apagar Cadastro</string>
+    <string name="pref_default_dereg_op_request">/fidouaf/apagar_conta.php</string>
+    <string name="pref_title_auth_op_response">Autenticação - Resposta</string>
+    <string name="pref_default_auth_op_response">/fidouaf/auth_res.php</string>
+    <string name="pref_title_auth_op_request">Autenticação - Requisição</string>
+    <string name="pref_default_auth_op_request">/fidouaf/auth_req.php</string>
+    <string name="pref_title_reg_op_response">Registro - Resposta</string>
+    <string name="pref_default_reg_op_response">/fidouaf/registro_res.php</string>
+    <string name="pref_title_reg_op_request">Registro - Requisição</string>
+    <string name="pref_default_reg_op_request">/fidouaf/registro_req.php</string>
+
+    <string name="registerAuthenticatorMessage">Cadastrar usuário</string>
+    <string name="statusMessage">FIDO UAF Client is not registered yet.</string>
+    <string name="authenticationMessage">Testar autenticação</string>
+    <string name="servicedescription">Service card reader</string>
+    <string name="aiddescription">aiddescription</string>
+
+    <!--error strings-->
+    <string name="alert_error_title">Something is wrong</string>
+    <string name="no_fido_client_found">No FIDO UAF Client was found.</string>
+    <string name="operation_cancelled">The FIDO operation was cancelled.</string>
+    <string name="activity_result_error">Unexpected activity result code: </string>
+    <string name="internal_server_error">Internal Server Error</string>
+    <string name="connection_error">The server is not reachable</string>
+    <string name="button_done">Ok</string>
+    <string name="action_reset">Reset</string>
+    <string name="username_label">Usuário:</string>
+    <string name="keyid_label">KeyId:</string>
+    <string name="pubkey_label">PubKey:</string>
+    <string name="DeRegMessage">Apagar cadastro do usuário</string>
+    <string name="pubkey_title">Public Key</string>
+    <string name="server_label">Endpoint:</string>
+    <string name="action_sign">Ver facetID</string>
+    <string name="app_sign_dialog">facetID</string>
+    <string name="button_go_to_settings">Configurações</string>
+    <string name="emptyusername">Configuração não realizada</string>
+    <string name="emptyusernamemessage">Você deve definir um nome de usuário.</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+</resources>

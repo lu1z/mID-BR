@@ -53,7 +53,7 @@
         <activity
             android:name="com.example.midBR.HttpActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <service
             android:name="com.example.midBR.CardHostApduService"

@@ -172,16 +172,6 @@
                 android:onClick="deregisterAuthenticator"
                 android:text="@string/DeRegMessage" />
 
-            <Button
-                android:id="@+id/buttonAuthentication"
-                style="@android:style/Widget.Material.Button.Colored"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:onClick="authentication"
-                android:text="@string/authenticationMessage" />
-
-
         </LinearLayout>
 
     </LinearLayout>

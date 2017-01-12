@@ -57,4 +57,5 @@ public class ServerResponse {
     public void setStatus(String status) {
         this.status = status;
     }
+
 }

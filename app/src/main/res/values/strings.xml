@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">mID-BR (CADASTRO)</string>
+    <string name="app_name">mID-BR</string>
     <string name="action_settings">Configurações</string>
     <string name="title_activity_settings">Configurações</string>
 
@@ -8,20 +8,22 @@
     <string name="pref_title_display_name">Usuário</string>
     <string name="pref_default_display_name"></string>
 
+    <string name="pref_default_timeout">10</string>
+    <string name="pref_title_timeout">SP Timeout</string>
     <string name="pref_title_account">Enable this user account</string>
     <string name="pref_description_account">This account could be used to open doors</string>
-    <string name="pref_title_server_endpoint">Servidor</string>
+    <string name="pref_title_server_endpoint">Servidor FIDO UAF</string>
     <string name="pref_default_server_endpoint">https://idpfido.cafeexpresso.rnp.br</string>
     <string name="pref_title_degreg_op_request">Apagar Cadastro</string>
     <string name="pref_default_dereg_op_request">/fidouaf/apagar_conta.php</string>
     <string name="pref_title_auth_op_response">Autenticação - Resposta</string>
-    <string name="pref_default_auth_op_response">/fidouaf/auth_res.php</string>
+    <string name="pref_default_auth_op_response">/fidouaf/auth.php</string>
     <string name="pref_title_auth_op_request">Autenticação - Requisição</string>
-    <string name="pref_default_auth_op_request">/fidouaf/auth_req.php</string>
+    <string name="pref_default_auth_op_request">/fidouaf/auth.php</string>
     <string name="pref_title_reg_op_response">Registro - Resposta</string>
-    <string name="pref_default_reg_op_response">/fidouaf/registro_res.php</string>
+    <string name="pref_default_reg_op_response">/fidouaf/registro.php</string>
     <string name="pref_title_reg_op_request">Registro - Requisição</string>
-    <string name="pref_default_reg_op_request">/fidouaf/registro_req.php</string>
+    <string name="pref_default_reg_op_request">/fidouaf/registro.php</string>
 
     <string name="registerAuthenticatorMessage">Cadastrar usuário</string>
     <string name="statusMessage">FIDO UAF Client is not registered yet.</string>
@@ -43,7 +45,7 @@
     <string name="pubkey_label">PubKey:</string>
     <string name="DeRegMessage">Apagar cadastro do usuário</string>
     <string name="pubkey_title">Public Key</string>
-    <string name="server_label">Endpoint:</string>
+    <string name="server_label">Servidor FIDO</string>
     <string name="action_sign">Ver facetID</string>
     <string name="app_sign_dialog">facetID</string>
     <string name="button_go_to_settings">Configurações</string>

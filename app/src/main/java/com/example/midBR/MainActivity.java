@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private SharedPreferences mSharedPreferences;
     private ApplicationContextDoorLock mApplicationContextDoorLock;
     SettingsActivity sa;
+    public static String urlService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +56,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
 
-
         PreferenceManager.setDefaultValues(ApplicationContextDoorLock.getContext(), R.xml.pref_general, false);
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(ApplicationContextDoorLock.getContext());
         mApplicationContextDoorLock = ApplicationContextDoorLock.getInstance();
@@ -63,7 +63,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void init() {
-
         String username = mSharedPreferences.getString("usernameMain", "");
         View cardReg = findViewById(R.id.card_register);
         View cardDetails = findViewById(R.id.card_userdetails);
@@ -103,15 +102,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                         }
                     }).show();
-        }else {
+        } else {
             Intent intent = new Intent(this, RegisterActivity.class);
             startActivityForResult(intent, REG);
         }
-    }
-
-    public void authentication(View view) {
-        Intent intent = new Intent(this, AuthenticationActivity.class);
-        startActivityForResult(intent, AUTH);
     }
 
     public void dereg() {
@@ -206,6 +200,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             Bundle bundle = new Bundle();
                             bundle.putString("username", serverResponse.getUsername());
                             bundle.putString("keyid", serverResponse.getKeyID());
+                            bundle.putString("urlService", urlService);
                             Intent intent = new Intent(this, HttpActivity.class);
                             intent.putExtras(bundle);
                             startActivity(intent);
@@ -223,7 +218,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     if (!result.isEmpty()) {
                         dereg();
                         Toast.makeText(this, "Dereg ok!", Toast.LENGTH_SHORT).show();
-
                     }
                     break;
             }
@@ -291,11 +285,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.nav_sp04) {
-            Toast.makeText(this, "SP04", Toast.LENGTH_SHORT).show();
+            urlService = "https://sp04.redes.eng.br/index.php/Especial:Autenticar-se";
+            Intent intent = new Intent(this, AuthenticationActivity.class);
+            startActivityForResult(intent, AUTH);
         } else if (id == R.id.nav_sprnp) {
-            Toast.makeText(this, "RNP", Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.nav_home){
-            Toast.makeText(this, "HOME", Toast.LENGTH_SHORT).show();
+            urlService = "https://sp-saml.gidlab.rnp.br/index.php/Especial:Autenticar-se";
+            Intent intent = new Intent(this, AuthenticationActivity.class);
+            startActivityForResult(intent, AUTH);
+        } else if (id == R.id.nav_home) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.layout_main);

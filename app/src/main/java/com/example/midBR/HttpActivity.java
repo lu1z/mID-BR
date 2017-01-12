@@ -42,6 +42,7 @@ public class HttpActivity extends AppCompatActivity implements NavigationView.On
     private static String username = "";
     private static String keyid = "";
     private String urlService = "";
+    static boolean first = true;
     private static ProgressDialog dialog;
     private final int AUTH = 2;
     private SharedPreferences mSharedPreferences;
@@ -76,6 +77,12 @@ public class HttpActivity extends AppCompatActivity implements NavigationView.On
             urlService = bundle.getString("urlService");
 
             web = (WebView) findViewById(R.id.web);
+            web.clearCache(true);
+            web.clearFormData();
+            web.clearHistory();
+            web.clearSslPreferences();
+            web.clearMatches();
+            web.clearAnimation();
             WebSettings webSettings = web.getSettings();
             webSettings.setJavaScriptEnabled(true);
             web.getSettings().setJavaScriptEnabled(true);
@@ -83,6 +90,7 @@ public class HttpActivity extends AppCompatActivity implements NavigationView.On
             web.setVisibility(View.INVISIBLE);
             String urlParameters = "";
             urlParameters = "otp=" + URLEncoder.encode((username + keyid), "UTF-8");
+
             final String finalUrlParameters = urlParameters;
             web.setWebViewClient(new WebViewClient() {
                 @Override
@@ -103,6 +111,17 @@ public class HttpActivity extends AppCompatActivity implements NavigationView.On
                 }
             });
 
+            long time = Integer.parseInt(mSharedPreferences.getString("timeout", "10")) * 1000;
+            new Handler().postDelayed(new Runnable() {
+                public void run() {
+                    if(dialog != null)
+                        if (dialog.isShowing()) {
+                            dialog.dismiss();
+                            goBack();
+                        }
+                }
+            }, time);
+
             HttpActivity.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -110,7 +129,7 @@ public class HttpActivity extends AppCompatActivity implements NavigationView.On
                     web.loadUrl(urlService);
                 }
             });
-            timeout(dialog);
+
         } catch (Exception e) {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
@@ -118,8 +137,9 @@ public class HttpActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void goBack() {
-        if(dialog.isShowing())
-            dialog.dismiss();
+        if(dialog != null)
+            if(dialog.isShowing())
+                dialog.dismiss();
 
         Toast.makeText(this, "Serviço não está disponível", Toast.LENGTH_SHORT).show();
 
@@ -127,17 +147,6 @@ public class HttpActivity extends AppCompatActivity implements NavigationView.On
         startActivity(intent);
     }
 
-    public void timeout(final ProgressDialog d) {
-        long time = Integer.parseInt(mSharedPreferences.getString("timeout", "10")) * 1000;
-        new Handler().postDelayed(new Runnable() {
-            public void run() {
-                if (d.isShowing()) {
-                    d.dismiss();
-                    goBack();
-                }
-            }
-        }, time);
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

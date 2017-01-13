@@ -2,11 +2,13 @@ package com.example.midBR;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -17,10 +19,12 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
@@ -41,7 +45,6 @@ public class HttpActivity extends AppCompatActivity implements NavigationView.On
     private static WebView web;
     private static String username = "";
     private static String keyid = "";
-    private String urlService = "";
     private static ProgressDialog dialog;
     private final int AUTH = 2;
     private SharedPreferences mSharedPreferences;
@@ -66,16 +69,21 @@ public class HttpActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         try {
-            CookieManager cookieManager = CookieManager.getInstance();
-            cookieManager.removeAllCookie();
+
+            clearCookies(this);
 
             Bundle bundle = getIntent().getExtras();
 
             username = bundle.getString("username");
             keyid = bundle.getString("keyid");
-            urlService = bundle.getString("urlService");
 
             web = (WebView) findViewById(R.id.web);
+            web.clearCache(true);
+            web.clearFormData();
+            web.clearHistory();
+            web.clearSslPreferences();
+            web.clearMatches();
+            web.clearAnimation();
             WebSettings webSettings = web.getSettings();
             webSettings.setJavaScriptEnabled(true);
             web.getSettings().setJavaScriptEnabled(true);
@@ -83,6 +91,7 @@ public class HttpActivity extends AppCompatActivity implements NavigationView.On
             web.setVisibility(View.INVISIBLE);
             String urlParameters = "";
             urlParameters = "otp=" + URLEncoder.encode((username + keyid), "UTF-8");
+
             final String finalUrlParameters = urlParameters;
             web.setWebViewClient(new WebViewClient() {
                 @Override
@@ -103,41 +112,63 @@ public class HttpActivity extends AppCompatActivity implements NavigationView.On
                 }
             });
 
+            long time = Integer.parseInt(mSharedPreferences.getString("timeout", "10")) * 1000;
+            new Handler().postDelayed(new Runnable() {
+                public void run() {
+                    if(dialog != null)
+                        if (dialog.isShowing()) {
+                            dialog.dismiss();
+                            goBack();
+                        }
+                }
+            }, time);
+
             HttpActivity.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     dialog = ProgressDialog.show(HttpActivity.this, "", "Acessando SP ...");
-                    web.loadUrl(urlService);
+                    web.loadUrl(MainActivity.urlService);
                 }
             });
-            timeout(dialog);
+
         } catch (Exception e) {
             Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         }
     }
 
+    @SuppressWarnings("deprecation")
+    public static void clearCookies(Context context) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            Log.d("COOKIE", "Using clearCookies code for API >=" + String.valueOf(Build.VERSION_CODES.LOLLIPOP_MR1));
+            CookieManager.getInstance().removeAllCookies(null);
+            CookieManager.getInstance().flush();
+        } else {
+            Log.d("COOKIE", "Using clearCookies code for API <" + String.valueOf(Build.VERSION_CODES.LOLLIPOP_MR1));
+            CookieSyncManager cookieSyncMngr = CookieSyncManager.createInstance(context);
+            cookieSyncMngr.startSync();
+            CookieManager cookieManager = CookieManager.getInstance();
+            cookieManager.removeAllCookie();
+            cookieManager.removeSessionCookie();
+            cookieSyncMngr.stopSync();
+            cookieSyncMngr.sync();
+        }
+    }
+
     private void goBack() {
-        if(dialog.isShowing())
-            dialog.dismiss();
+        if(dialog != null)
+            if(dialog.isShowing())
+                dialog.dismiss();
 
         Toast.makeText(this, "Serviço não está disponível", Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
 
-    public void timeout(final ProgressDialog d) {
-        long time = Integer.parseInt(mSharedPreferences.getString("timeout", "10")) * 1000;
-        new Handler().postDelayed(new Runnable() {
-            public void run() {
-                if (d.isShowing()) {
-                    d.dismiss();
-                    goBack();
-                }
-            }
-        }, time);
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -202,13 +233,16 @@ public class HttpActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.nav_sp04) {
             MainActivity.urlService = "https://sp04.redes.eng.br/index.php/Especial:Autenticar-se";
             Intent intent = new Intent(this, AuthenticationActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivityForResult(intent, AUTH);
         } else if (id == R.id.nav_sprnp) {
             MainActivity.urlService = "https://sp-saml.gidlab.rnp.br/index.php/Especial:Autenticar-se";
             Intent intent = new Intent(this, AuthenticationActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivityForResult(intent, AUTH);
         } else if (id == R.id.nav_home) {
             Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         }
 

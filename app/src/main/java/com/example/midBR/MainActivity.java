@@ -200,11 +200,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             Bundle bundle = new Bundle();
                             bundle.putString("username", serverResponse.getUsername());
                             bundle.putString("keyid", serverResponse.getKeyID());
-                            bundle.putString("urlService", urlService);
                             Intent intent = new Intent(this, HttpActivity.class);
                             intent.putExtras(bundle);
                             startActivity(intent);
-                            //Toast.makeText(getApplicationContext(), serverResponse.getStatus(), Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(this, "Something is wrong", Toast.LENGTH_SHORT).show();
                         }

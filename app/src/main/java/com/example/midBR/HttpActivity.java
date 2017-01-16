@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -30,7 +31,10 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
 
 import java.net.URLEncoder;
 import java.security.MessageDigest;
@@ -68,14 +72,33 @@ public class HttpActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        try {
+        reload(null);
+    }
 
+    private void updateMainLayout(ServerResponseReg serverResponseReg) {
+        if (serverResponseReg.getStatus().equals("SUCCESS")) {
+            SharedPreferences.Editor editor = mSharedPreferences.edit();
+            editor.putString("usernameMain", serverResponseReg.getUsername());
+            editor.putString("keyid", serverResponseReg.getAuthenticator().getKeyID());
+            editor.putString("aaid", serverResponseReg.getAuthenticator().getAAID());
+            editor.putString("pubkey", serverResponseReg.getPublicKey());
+            editor.putString("server", mSharedPreferences.getString("fido_server_endpoint", ""));
+            editor.apply();
+        }
+    }
+
+    private void reload(ServerResponse responseReg) {
+        try {
             clearCookies(this);
 
-            Bundle bundle = getIntent().getExtras();
-
-            username = bundle.getString("username");
-            keyid = bundle.getString("keyid");
+            if(responseReg != null) {
+                username = responseReg.getUsername();
+                keyid = responseReg.getKeyID();
+            }else {
+                Bundle bundle = getIntent().getExtras();
+                username = bundle.getString("username");
+                keyid = bundle.getString("keyid");
+            }
 
             web = (WebView) findViewById(R.id.web);
             web.clearCache(true);
@@ -126,7 +149,8 @@ public class HttpActivity extends AppCompatActivity implements NavigationView.On
             HttpActivity.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    dialog = ProgressDialog.show(HttpActivity.this, "", "Acessando SP ...");
+                    dialog = ProgressDialog.show(HttpActivity.this, "", "Acessando "+ MainActivity.urlService+" ...");
+                    Toast.makeText(HttpActivity.this, MainActivity.urlService, Toast.LENGTH_LONG).show();
                     web.loadUrl(MainActivity.urlService);
                 }
             });
@@ -214,6 +238,37 @@ public class HttpActivity extends AppCompatActivity implements NavigationView.On
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(data != null) {
+            Bundle extra = data.getExtras();
+            Toast toast;
+            String result;
+            String[] status;
+            String response;
+            Gson gson = new Gson();
+            result = extra.getString("result");
+            if (!result.isEmpty()) {
+                // **************************************************
+                // It is specific for eBay RP Server Response - github.com/eBay/UAF
+                status = result.split("#ServerResponse\n");
+                if (status.length > 1) {
+                    response = status[1].trim();
+                    response = response.substring(1, response.length() - 1);
+                    ServerResponse serverResponse = gson.fromJson(response, ServerResponse.class);
+                    //TODO Do something instead of toast message!
+                    reload(serverResponse);
+                } else {
+                    Toast.makeText(this, "Something is wrong", Toast.LENGTH_SHORT).show();
+                }
+                // **************************************************
+            } else {
+                Toast.makeText(this, "Something is wrong", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     @Override

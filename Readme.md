@@ -6,7 +6,7 @@ Criado com base no aplicativo em "emersonmello/openingdoor", aplicativo interage
 
 2- https://sp-saml.gidlab.rnp.br/
 
-3- https://sp04.redes.eng.br/
+3- https://sp04.redes.eng.br/ (desativado)
 
 
 
